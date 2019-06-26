@@ -1,0 +1,122 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct node_t
+{
+	int yol;
+	struct node_t* left;
+	struct node_t* right;
+	struct node_t* top;
+	struct node_t* bottom;
+};
+
+typedef struct node_t node;
+typedef node* nodePtr;
+
+void listeEkle(nodePtr* root, nodePtr newNode, int col, int row);
+void matrixYazdir(nodePtr root);
+
+int main()
+{
+	int sutun=0,satir=0,random=0;
+	int i,j;
+
+	nodePtr root = NULL;
+
+	printf("satir ve sutun sayisini girin");
+	scanf("%d %d",&sutun,&satir);
+
+	for (i = 0; i<satir; i++)
+	{
+		for(j=0; j<sutun; j++)
+		{
+			random = rand()%2;
+            nodePtr yeniNode = (nodePtr)malloc(sizeof(nodePtr));
+			yeniNode->yol = random;
+			yeniNode->bottom = NULL;
+			yeniNode->right = NULL;
+			yeniNode->top = NULL;
+			yeniNode->left = NULL;
+			listeEkle(&root, yeniNode, sutun, satir);
+		}
+	}
+
+	matrixYazdir(root);
+    return 0;
+}
+
+void listeEkle(nodePtr* root, nodePtr newNode, int maxColumn, int maxRow)
+{
+	nodePtr temp = *root;
+
+	if (temp == NULL)
+	{
+		*root = (nodePtr)malloc(sizeof(nodePtr));
+		*root = newNode;
+	}
+	else
+	{
+		nodePtr satirBasi = NULL;
+		satirBasi = *root;
+		int row = 0;
+
+		while (row < maxRow)
+		{
+			int col = 0;
+			nodePtr temp = satirBasi;
+			while (col < maxColumn -1)
+			{
+				if (temp->right != NULL)
+				{
+					temp = temp->right;
+					col++;
+				}
+				else if (col < maxColumn -1)
+				{
+					//bos olan ve eklenecek dügüme gelindi.
+					newNode->left = temp;
+					if (temp->top != NULL)
+						newNode->top = temp->top->right;
+					temp->right = newNode;
+					return;
+				}
+				else col++;
+			}
+			if (satirBasi->bottom == NULL)
+			{
+				// bir sonraki satýrýn ilk elemanýný doldurmak için.
+				newNode->top = satirBasi;
+				satirBasi->bottom = newNode;
+				return;
+			}
+			else
+			{
+				satirBasi = satirBasi->bottom;
+				row++;
+			}
+
+		}
+	}
+
+}
+
+void matrixYazdir(nodePtr root)
+{
+	nodePtr satirBasi = NULL;
+	satirBasi = root;
+
+	while (satirBasi != NULL)
+	{
+		nodePtr temp = satirBasi;
+		while (temp != NULL)
+		{
+			printf("\t%d", temp->yol);
+			temp = temp->right;
+		}
+		printf("\n");
+		if (satirBasi->bottom != NULL)
+			satirBasi = satirBasi->bottom;
+		else
+			return;
+	}
+}

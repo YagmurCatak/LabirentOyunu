@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1512502784 source:c:\users\yagmur\desktop\labirent oyunu\labirent_oyunu\main.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	<string.h>
+
